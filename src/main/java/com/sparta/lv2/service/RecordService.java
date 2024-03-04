@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,10 +52,23 @@ public class RecordService {
 
     public List<RecordResponseDto> getAllBorrowHistory() {
         List<Record> borrowRecords = recordRepository.findAll();
-        return borrowRecords.stream()
-                .map(RecordResponseDto::new)
-                .collect(Collectors.toList());
+        List<RecordResponseDto> borrowHistory = new ArrayList<>();
+        for (Record record : borrowRecords) {
+            Book book = bookRepository.findById(record.getBookId()).orElse(null);
+            User user = userRepository.findById(record.getUserId()).orElse(null);
+            if (book != null && user != null) {
+                borrowHistory.add(new RecordResponseDto(
+                        record,
+                        book.getTitle(),
+                        book.getWriter(),
+                        user.getName(),
+                        user.getPhoneNum()
+                ));
+            }
+        }
+        return borrowHistory;
     }
+
 
     @Transactional
     public ResponseEntity borrowBook(Long userId, Long bookId) {
