@@ -12,6 +12,9 @@ import lombok.Setter;
 @Table(name = "Books") // 매핑할 테이블의 이름을 지정
 @NoArgsConstructor
 public class Book extends BookTime {
+    public static final int BORROWED = 1;
+    public static final int AVAILABLE = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookId;
@@ -25,7 +28,7 @@ public class Book extends BookTime {
     @Column(name = "publisher", nullable = false, length = 100)
     private String publisher;
     @Column(name = "borrowStatus", nullable = false)
-    private int borrowStatus; // 0 = 대출가능, 1 = 대출중, 예약중/상호대차 등을 고려 boolean이 아닌 int로 선언
+    private int borrowStatus; // BORROWED=1=대출가능, AVAILABLE=0=대출중
 
     public Book(BookRequestDto requestDto) {
         this.title = requestDto.getTitle();
