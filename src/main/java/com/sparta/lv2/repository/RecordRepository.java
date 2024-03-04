@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
     Record findByBookIdAndReturnDateIsNull(Long bookId);
+    Record findByBorrowStatusAndUserId(int borrowStatus, Long userId);
+    Record findByBorrowStatusAndBookId(int borrowStatus, Long bookId);
 }

@@ -37,10 +37,4 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
     }
-
-//    @PutMapping("/book-borrow/{userId}/{bookId}")
-//    public ResponseEntity<String> borrowBook(@PathVariable Long userId, @PathVariable Long bookId) {
-//        ResponseEntity<String> responseEntity = bookService.borrowBook(userId, bookId);
-//        return responseEntity;
-//    }
 }

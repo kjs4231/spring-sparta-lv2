@@ -7,8 +7,12 @@ import com.sparta.lv2.entity.Record;
 import com.sparta.lv2.entity.User;
 import com.sparta.lv2.repository.BookRepository;
 import com.sparta.lv2.repository.RecordRepository;
+import com.sparta.lv2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
 public class RecordService {
     private final RecordRepository recordRepository;
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
 
     public int returnBook(Long bookId) {
         Book book = bookRepository.findById(bookId)
@@ -47,5 +52,25 @@ public class RecordService {
         return borrowRecords.stream()
                 .map(RecordResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ResponseEntity borrowBook(Long userId, Long bookId) {
+        Book book = bookRepository.findBookByBookId(bookId);
+        User user = userRepository.findUserByUserId(userId);
+        Record record1 = recordRepository.findByBorrowStatusAndUserId(Book.BORROWED, userId); // BORROWED=대출중, AVAILABLE=대출가능
+        Record record2 = recordRepository.findByBorrowStatusAndBookId(Book.BORROWED, bookId);
+
+        if(book == null || user == null) { // 유효하지않은 bookId/userId
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("유효하지않은 bookId/userId");
+        } else if(record1 != null || record2 != null) { // 이미 대출중
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 대출중입니다");
+        } else {
+            Record record = new Record(book, user, new Date());
+            record.setBorrowStatus(book.BORROWED);
+            recordRepository.save(record);
+            book.setBorrowStatus(book.BORROWED);
+            return ResponseEntity.ok("대출완료!!");
+        }
     }
 }

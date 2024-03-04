@@ -28,7 +28,7 @@ public class Book extends BookTime {
     @Column(name = "publisher", nullable = false, length = 100)
     private String publisher;
     @Column(name = "borrowStatus", nullable = false)
-    private int borrowStatus; // BORROWED=1=대출가능, AVAILABLE=0=대출중
+    private int borrowStatus; // BORROWED=대출중, AVAILABLE=대출가능
 
     public Book(BookRequestDto requestDto) {
         this.title = requestDto.getTitle();

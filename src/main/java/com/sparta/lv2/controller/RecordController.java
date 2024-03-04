@@ -31,4 +31,11 @@ public class RecordController {
         List<RecordResponseDto> borrowHistory = recordService.getAllBorrowHistory();
         return new ResponseEntity<>(borrowHistory, HttpStatus.OK);
     }
+
+
+    @PutMapping("/book-borrow/{userId}/{bookId}")
+    public ResponseEntity<String> borrowBook(@PathVariable Long userId, @PathVariable Long bookId) {
+        ResponseEntity<String> responseEntity = recordService.borrowBook(userId, bookId);
+        return responseEntity;
+    }
 }
