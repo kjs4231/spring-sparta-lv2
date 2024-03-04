@@ -42,8 +42,10 @@ public class RecordService {
         book.setBorrowStatus(0);
         bookRepository.save(book);
 
+        record.setBorrowStatus(0);
         record.setReturnDate(new Date());
         recordRepository.save(record);
+
         return 1;
     }
 
