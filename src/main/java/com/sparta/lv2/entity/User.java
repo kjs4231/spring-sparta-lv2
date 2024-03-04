@@ -1,44 +1,42 @@
 package com.sparta.lv2.entity;
 
+import com.sparta.lv2.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.awt.print.Book;
-import java.util.Date;
-
 @Entity
 @Getter
 @Setter
+@Table(name = "Users")
 @NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false, unique = true)
-    private String birthNum;
+    @Column(name = "birthNum", nullable = false, unique = true, length = 100)
+    private String birthNum = "";
 
-    @Column(nullable = false, unique = true)
-    private String phoneNum;
+    @Column(name = "phoneNum", nullable = false, unique = true, length = 100)
+    private String phoneNum = "";
 
-    @Column(nullable = false)
-    private String name;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name = "";;
 
-    @Column(nullable = false)
-    private String gender;
+    @Column(name = "gender", nullable = false, length = 10)
+    private String gender = "";;
 
-    @Column(nullable = false)
-    private String address;
+    @Column(name = "address", nullable = false, length = 1000)
+    private String address = "";;
 
-    @ManyToOne
-    @JoinColumn(name = "bookId")
-    private String borrowBook;
+    public User(UserRequestDto requestDto) {
+        this.birthNum = requestDto.getBirthNum();
+        this.phoneNum = requestDto.getPhoneNum();
+        this.name = requestDto.getName();
+        this.gender = requestDto.getGender();
+        this.address = requestDto.getAddress();
+    }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date borrowDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date returnDate;
 }
